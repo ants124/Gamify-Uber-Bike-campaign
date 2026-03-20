@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Win the City — New Delhi Map Concept</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: 100vh;
+    background: #0a0a0f;
+  }
+
+  @media (min-width: 900px) {
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at top, #141426 0%, #0a0a0f 55%);
+    }
+
+    .app-shell {
+      width: min(100%, 430px);
+      min-height: calc(100vh - 48px);
+      border: 1px solid #1a1a2e;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    background: #0a0a0f;
+    border-bottom: 1px solid #1a1a2e;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .uber-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .uber-logo img {
+    height: 24px;
+    width: auto;
+    filter: invert(1);
+  }
+
+  .uber-logo-tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: #06C167;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1.5px solid #06C167;
+    border-radius: 6px;
+    padding: 2px 7px;
+    line-height: 1.4;
+  }
+
+  .profile-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #16213e;
+    border-radius: 20px;
+    padding: 6px 14px 6px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #06C167, #00a855);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ── HERO STATS ── */
+  .hero {
+    padding: 20px 20px 0;
+  }
+
+  .hero-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+
+  .hero-title .highlight {
+    color: #06C167;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .stat-card {
+    background: #16213e;
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    border: 1px solid #1a2a4a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(6,193,103,0.08));
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #06C167;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: #8892a4;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  /* ── TIER BADGE ── */
+  .tier-banner {
+    margin: 16px 20px 0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #2a2a5e;
+  }
+
+  .tier-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tier-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .tier-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #f59e0b;
+  }
+
+  .tier-sub {
+    font-size: 11px;
+    color: #8892a4;
+    margin-top: 2px;
+  }
+
+  .tier-progress-wrap {
+    text-align: right;
+  }
+
+  .tier-progress-label {
+    font-size: 11px;
+    color: #8892a4;
+    margin-bottom: 5px;
+  }
+
+  .tier-progress-bar {
+    width: 100px;
+    height: 6px;
+    background: #0a0a1f;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .tier-progress-fill {
+    height: 100%;
+    width: 72%;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    border-radius: 3px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 20px 12px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .section-link {
+    font-size: 12px;
+    color: #06C167;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* ── MAP AREA ── */
+  .map-container {
+    margin: 0 20px;
+    background: #0d1b2a;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1a2a4a;
+    position: relative;
+  }
+
+  /* Match Images/map.png intrinsic ratio (2001×1638) so image + SVG crop identically */
+  .map-svg-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2001 / 1638;
+    max-height: 340px;
+  }
+
+  .map-svg-wrap .map-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Vector overlay: same 400×340 coords as original mockup; slice = match image cover crop */
+  .map-svg-wrap .map-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: block;
+  }
+
+  .map-legend {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    border-top: 1px solid #1a2a4a;
+    background: #0a1520;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #8892a4;
+    font-weight: 600;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* ── ROUTE CARDS ── */
+  .routes-scroll {
+    display: flex;
+    gap: 12px;
+    padding: 0 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    cursor: grab;
+  }
+
+  .routes-scroll::-webkit-scrollbar { display: none; }
+
+  .routes-scroll.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    user-select: none;
+  }
+
+  .routes-scroll.is-dragging .route-card {
+    pointer-events: none;
+  }
+
+  .route-card {
+    flex: 0 0 160px;
+    background: #16213e;
+    border-radius: 16px;
+    padding: 14px;
+    border: 1px solid #1a2a4a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .route-card.owned {
+    border-color: #06C167;
+  }
+
+  .route-card.owned::after {
+    content: '👑';
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 14px;
+  }
+
+  .route-card.contested {
+    border-color: #f59e0b;
+  }
+
+  .route-card.contested::after {
+    content: '⚡';
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 14px;
+  }
+
+  .route-name {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+    padding-right: 20px;
+  }
+
+  .route-meta {
+    margin-top: 8px;
+    font-size: 10px;
+    color: #8892a4;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .route-wins-bar {
+    margin-top: 10px;
+    height: 4px;
+    background: #0a0a1f;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .route-wins-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #06C167, #00e676);
+  }
+
+  .route-wins-fill.contested {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  }
+
+  .route-wins-count {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #06C167;
+    font-weight: 700;
+  }
+
+  .route-wins-count.contested {
+    color: #f59e0b;
+  }
+
+  /* ── STREAK ── */
+  .streak-row {
+    display: flex;
+    gap: 6px;
+    padding: 0 20px;
+    justify-content: space-between;
+  }
+
+  .streak-day {
+    flex: 1;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    gap: 4px;
+  }
+
+  .streak-day.won {
+    background: linear-gradient(135deg, #06C167, #00a855);
+    color: #fff;
+  }
+
+  .streak-day.today {
+    background: linear-gradient(135deg, #1a3a5e, #16213e);
+    border: 2px solid #06C167;
+    color: #06C167;
+  }
+
+  .streak-day.lost {
+    background: #16213e;
+    color: #4a5568;
+    border: 1px solid #1a2a4a;
+  }
+
+  .streak-day.protected {
+    background: linear-gradient(135deg, #2a1a5e, #16213e);
+    border: 1px solid #8b5cf6;
+    color: #8b5cf6;
+  }
+
+  .streak-icon { font-size: 14px; }
+
+  /* ── LAST RIDE RESULT ── */
+  .last-ride {
+    margin: 16px 20px 0;
+    background: linear-gradient(135deg, #06C167 0%, #00a855 100%);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .last-ride-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+
+  .last-ride-result {
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  .last-ride-detail {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+
+  .win-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-size: 28px;
+    font-weight: 900;
+  }
+
+  /* ── POWERED BY ── */
+  .powered-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-top: 1px solid #1a1a2e;
+    margin-top: 8px;
+  }
+  .powered-label {
+    font-size: 11px;
+    color: #4a5568;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .powered-logo { height: 22px; width: auto; object-fit: contain; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    display: flex;
+    background: #0a0a0f;
+    border-top: 1px solid #1a1a2e;
+    padding: 12px 0 20px;
+    margin-top: 24px;
+    position: sticky;
+    bottom: 0;
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #4a5568;
+    cursor: pointer;
+  }
+
+  .nav-item.active { color: #06C167; }
+  .nav-icon { font-size: 20px; }
+
+  /* ── TOOLTIP ── */
+  .tooltip-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: flex-end;
+  }
+
+  .tooltip-overlay.show { display: flex; }
+
+  .tooltip-sheet {
+    background: #16213e;
+    border-radius: 24px 24px 0 0;
+    padding: 24px 24px 36px;
+    width: 100%;
+    border-top: 2px solid #06C167;
+  }
+
+  .tooltip-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .tooltip-body {
+    font-size: 14px;
+    color: #8892a4;
+    line-height: 1.6;
+  }
+
+  .tooltip-close {
+    float: right;
+    background: #0a0a1f;
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="uber-logo"><img src="data:image/png;base64,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" alt="Uber"/><span class="uber-logo-tag">Bike</span></div>
+  <div class="profile-pill">
+    <div class="avatar">AR</div>
+    Arjun R
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">Your <span class="highlight">New Delhi Map.</span><br>Keep winning it.</div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">47</div>
+      <div class="stat-label">Total Wins</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">6</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Routes Owned</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIER BANNER -->
+<div class="tier-banner">
+  <div class="tier-left">
+    <div class="tier-icon">🏆</div>
+    <div>
+      <div class="tier-name">Street King</div>
+      <div class="tier-sub">3 wins to Delhi Legend</div>
+    </div>
+  </div>
+  <div class="tier-progress-wrap">
+    <div class="tier-progress-label">47 / 50 wins</div>
+    <div class="tier-progress-bar">
+      <div class="tier-progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LAST RIDE RESULT -->
+<div class="last-ride">
+  <div>
+    <div class="last-ride-label">Last Ride · Connaught Place → India Gate</div>
+    <div class="last-ride-result">You won by 11 mins</div>
+    <div class="last-ride-detail">Beat the bus. Streak extended to 6 days 🔥</div>
+  </div>
+  <div class="win-badge">W</div>
+</div>
+
+<!-- STREAK -->
+<div class="section-header">
+  <div class="section-title">This Week's Streak</div>
+  <a href="#" class="section-link">History</a>
+</div>
+
+<div class="streak-row">
+  <div class="streak-day won"><span class="streak-icon">✓</span>Mon</div>
+  <div class="streak-day won"><span class="streak-icon">✓</span>Tue</div>
+  <div class="streak-day protected"><span class="streak-icon">🛡</span>Wed</div>
+  <div class="streak-day won"><span class="streak-icon">✓</span>Thu</div>
+  <div class="streak-day won"><span class="streak-icon">✓</span>Fri</div>
+  <div class="streak-day today"><span class="streak-icon">→</span>Sat</div>
+  <div class="streak-day lost"><span class="streak-icon">–</span>Sun</div>
+</div>
+
+<!-- MAP -->
+<div class="section-header">
+  <div class="section-title">Your New Delhi Map</div>
+  <a href="#" class="section-link">Full map</a>
+</div>
+
+<div class="map-container">
+  <div class="map-svg-wrap">
+    <img class="map-image" src="Images/map.png" alt="New Delhi map showing your routes" decoding="async" />
+    <!-- Routes on map.png (2001×1638): green KG + Copernicus; orange = India Gate S arc (Akbar → Sher Shah). Nudge if map shifts. -->
+    <svg class="map-overlay" viewBox="0 0 2001 1638" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- KG Marg: India Gate C‑Hex (KG) → Connaught Cir outer ring -->
+      <line x1="992" y1="1174" x2="622" y2="430" stroke="#06C167" stroke-width="22" stroke-linecap="round" opacity="0.3"/>
+      <line x1="992" y1="1174" x2="622" y2="430" stroke="#06C167" stroke-width="14" stroke-linecap="round"/>
+      <!-- Copernicus Marg: ~N–S (almost vertical) — nudged east to sit on labeled Copernicus Marg -->
+      <line x1="1129" y1="660" x2="1111" y2="1102" stroke="#06C167" stroke-width="22" stroke-linecap="round" opacity="0.3"/>
+      <line x1="1129" y1="660" x2="1111" y2="1102" stroke="#06C167" stroke-width="14" stroke-linecap="round"/>
+
+      <!-- Contested: India Gate C‑Hex — S / lower arc (Akbar ↔ Sher Shah belt). Pulled down from N rim so it sits under the monument, not Copernicus side. -->
+      <path fill="none" stroke="#f59e0b" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"
+        d="M 958 1440 Q 1091 1612 1234 1442"/>
+      <path fill="none" stroke="#f59e0b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="28 22"
+        d="M 958 1440 Q 1091 1612 1234 1442"/>
+
+      <!-- Terminus dots: Connaught Cir (KG) · India Gate N rim (Copernicus) -->
+      <circle cx="622" cy="430" r="14" fill="#06C167" stroke="#0a0a0f" stroke-width="3"/>
+      <circle cx="1111" cy="1102" r="14" fill="#06C167" stroke="#0a0a0f" stroke-width="3"/>
+
+      <text x="807" y="802" font-size="54" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" dominant-baseline="central">👑</text>
+      <text x="1120" y="881" font-size="54" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" dominant-baseline="central">👑</text>
+
+      <text x="1094" y="1524" font-size="54" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" dominant-baseline="central">⚡</text>
+
+      <!-- Pulse along KG Marg (toward India Gate from crown) -->
+      <circle cx="854" cy="897" r="48" fill="none" stroke="#06C167" stroke-width="6" opacity="0.5">
+        <animate attributeName="r" values="34;68;34" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;0.12;0.5" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Biker icon ~same visual size as crown emojis (54px) -->
+      <image href="Images/Uber%20bike%20biker%20image.png" x="827" y="870" width="54" height="54" preserveAspectRatio="xMidYMid meet" pointer-events="none">
+        <title>Your location</title>
+      </image>
+    </svg>
+  </div>
+
+  <div class="map-legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#06C167; border-radius:2px;"></div>
+      Owned by you
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#f59e0b; border-radius:2px;"></div>
+      Contested
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#1e3048; border-radius:2px;"></div>
+      Unwinned
+    </div>
+  </div>
+</div>
+
+<!-- ROUTE CARDS -->
+<div class="section-header">
+  <div class="section-title">Your Routes</div>
+  <a href="#" class="section-link">See all</a>
+</div>
+
+<div class="routes-scroll">
+
+  <div class="route-card owned">
+    <div class="route-name">Connaught Place → India Gate</div>
+    <div class="route-meta">Owned · 12 wins</div>
+    <div class="route-wins-bar"><div class="route-wins-fill" style="width:100%"></div></div>
+    <div class="route-wins-count">12 / 10 to own ✓</div>
+  </div>
+
+  <div class="route-card owned">
+    <div class="route-name">Barakhamba Road → Mandi House</div>
+    <div class="route-meta">Owned · 11 wins</div>
+    <div class="route-wins-bar"><div class="route-wins-fill" style="width:100%"></div></div>
+    <div class="route-wins-count">11 / 10 to own ✓</div>
+  </div>
+
+  <div class="route-card contested">
+    <div class="route-name">Mandi House → Pragati Maidan</div>
+    <div class="route-meta">Contested · 6 wins</div>
+    <div class="route-wins-bar"><div class="route-wins-fill contested" style="width:60%"></div></div>
+    <div class="route-wins-count contested">6 / 10 to claim</div>
+  </div>
+
+  <div class="route-card contested">
+    <div class="route-name">Rajiv Chowk → Barakhamba Road</div>
+    <div class="route-meta">Contested · 4 wins</div>
+    <div class="route-wins-bar"><div class="route-wins-fill contested" style="width:40%"></div></div>
+    <div class="route-wins-count contested">4 / 10 to claim</div>
+  </div>
+
+  <div class="route-card">
+    <div class="route-name">India Gate → Mandi House</div>
+    <div class="route-meta">Owned · 10 wins</div>
+    <div class="route-wins-bar"><div class="route-wins-fill" style="width:100%"></div></div>
+    <div class="route-wins-count">10 / 10 to own ✓</div>
+  </div>
+
+</div>
+
+<!-- POWERED BY LIVEWIRE -->
+<div class="powered-by">
+  <span class="powered-label">Powered by</span>
+  <img class="powered-logo" src="Images/Livewire Logo.png" alt="Livewire"/>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <span class="nav-icon">🏠</span>
+    Home
+  </div>
+  <div class="nav-item active">
+    <span class="nav-icon">🗺️</span>
+    My Delhi
+  </div>
+  <div class="nav-item">
+    <span class="nav-icon">🏅</span>
+    Rewards
+  </div>
+  <div class="nav-item">
+    <span class="nav-icon">📊</span>
+    Leaderboard
+  </div>
+</div>
+
+</div>
+<script>
+(function () {
+  var el = document.querySelector('.routes-scroll');
+  if (!el) return;
+
+  var isDown = false;
+  var startX = 0;
+  var startScrollLeft = 0;
+
+  function endDrag() {
+    if (!isDown) return;
+    isDown = false;
+    el.classList.remove('is-dragging');
+  }
+
+  el.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    isDown = true;
+    el.classList.add('is-dragging');
+    startX = e.clientX;
+    startScrollLeft = el.scrollLeft;
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isDown) return;
+    e.preventDefault();
+    el.scrollLeft = startScrollLeft - (e.clientX - startX);
+  });
+
+  document.addEventListener('mouseup', endDrag);
+  window.addEventListener('blur', endDrag);
+})();
+</script>
+</body>
+</html>
